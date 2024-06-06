@@ -1,4 +1,4 @@
-package ru.albina._backend.configuration;
+package ru.albina.reference.configuration;
 
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.InjectionStrategy;

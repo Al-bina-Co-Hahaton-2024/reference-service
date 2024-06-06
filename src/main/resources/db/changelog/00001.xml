@@ -5,6 +5,42 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-<!--    <changeSet id="001" author="alexander (bigtows) chapchuk">-->
-<!--    </changeSet>-->
+    <changeSet id="001" author="alexander (bigtows) chapchuk">
+        <createTable tableName="hours_per_month">
+            <column name="month_date" type="date">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="hours" type="double">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="workload">
+            <column name="year" type="int">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="week" type="int">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="modality" type="varchar(15)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="type_modality" type="varchar(15)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="manual_value" type="bigint"/>
+            <column name="generated_value" type="bigint"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="002" author="alexander (bigtows) chapchuk">
+        <loadData tableName="workload" file="db/data/densitometer.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/flg.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/kt.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/kt_u.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/kt_u2.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/mmg.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/mrt.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/mrt_u.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/mrt_u2.csv" separator=";"/>
+        <loadData tableName="workload" file="db/data/rg.csv" separator=";"/>
+    </changeSet>
 </databaseChangeLog>
