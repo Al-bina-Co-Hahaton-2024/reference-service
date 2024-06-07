@@ -11,25 +11,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.albina.backlib.configuration.WebConstants;
 import ru.albina.backlib.configuration.auto.OpenApiConfiguration;
-import ru.albina.reference.domain.Modality;
-import ru.albina.reference.domain.TypeModality;
 import ru.albina.reference.dto.request.GetOrGenerateWorkloadRequest;
-import ru.albina.reference.dto.request.WorkloadEditRequest;
+import ru.albina.reference.dto.request.GetOrGenerateYearlyWorkloadRequest;
 import ru.albina.reference.dto.response.Workload;
 import ru.albina.reference.service.workload.WorkloadService;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(WebConstants.FULL_WEB + "/workloads")
+@RequestMapping(WebConstants.FULL_PRIVATE + "/workloads")
 @RequiredArgsConstructor
-public class WorkloadController {
+public class WorkloadInternalController {
 
     private final WorkloadService workloadService;
 
+
     @Operation(
-            summary = "Получить нагрузки по недельно",
+            summary = "Получить нагрузку за год по неделям",
             security = @SecurityRequirement(name = OpenApiConfiguration.JWT),
             responses = {
                     @ApiResponse(
@@ -39,10 +39,12 @@ public class WorkloadController {
                     )
             }
     )
-    //TODO @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping
-    public List<Workload> getWorkload() {
-        return this.workloadService.getWorkloads();
+    @PostMapping("/years/{year}/calculate")
+    public List<Workload> getWorkload(
+            @PathVariable("year") int year,
+            @RequestBody GetOrGenerateWorkloadRequest getOrGenerateWorkloadRequest
+    ) {
+        return this.workloadService.getOrCreate(year, getOrGenerateWorkloadRequest.getWeeks());
     }
 
 
@@ -57,36 +59,14 @@ public class WorkloadController {
                     )
             }
     )
-    //TODO @PreAuthorize("hasAnyRole('ADMIN')")
-    @PostMapping("/years/{year}/calculate")
+    @PostMapping("/calculate")
     public List<Workload> getWorkload(
-            @PathVariable("year") int year,
-            @RequestBody GetOrGenerateWorkloadRequest getOrGenerateWorkloadRequest
+            @RequestBody List<GetOrGenerateYearlyWorkloadRequest> getOrGenerateYearlyWorkloadRequests
     ) {
-        return this.workloadService.getOrCreate(year, getOrGenerateWorkloadRequest.getWeeks());
-    }
-
-
-    @Operation(
-            summary = "Указать нагрузку за неделю",
-            security = @SecurityRequirement(name = OpenApiConfiguration.JWT),
-            responses = {
-                    @ApiResponse(
-                            description = "ОК",
-                            responseCode = "200"
-                    )
-            }
-    )
-    //TODO @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("/years/{year}/weeks/{week}/modalities/{modality}/types/{typeModality}")
-    public void getWorkload(
-            @PathVariable("year") int year,
-            @PathVariable("week") int week,
-            @PathVariable("modality") Modality modality,
-            @PathVariable("typeModality") TypeModality typeModality,
-            @RequestBody WorkloadEditRequest workloadEditRequest
-    ) {
-        this.workloadService.editWorkload(year, week, modality, typeModality, workloadEditRequest.getValue());
+        return getOrGenerateYearlyWorkloadRequests.stream()
+                .map(request -> this.workloadService.getOrCreate(request.getYear(), request.getWeeks()))
+                .flatMap(Collection::stream)
+                .toList();
     }
 
 }

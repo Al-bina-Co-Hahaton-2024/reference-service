@@ -42,7 +42,7 @@ public class WorkloadService {
     }
 
     @Transactional
-    public LinkedList<Workload> getOrCreate(int year, Set<Integer> weeks) {
+    public List<Workload> getOrCreate(int year, Set<Integer> weeks) {
         final var result = new LinkedList<Workload>();
         weeks.forEach(week->{
             final var list = REFERENCE.keySet().stream()
