@@ -9,6 +9,7 @@ import ru.albina.reference.mapper.HoursPerMonthMapper;
 import ru.albina.reference.repository.HoursPerMonthRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -22,7 +23,12 @@ public class HoursPerMonthService {
 
     @Transactional(readOnly = true)
     public List<HoursPerMonthValue> getByYear(int year) {
-        return this.hoursPerMonthRepository.findAllById(IntStream.range(1, 12).mapToObj(month -> this.generateId(year, month)).toList())
+        List<LocalDate> list = new ArrayList<>();
+        for (int month = 1; month < 13; month++) {
+            LocalDate localDate = this.generateId(year, month);
+            list.add(localDate);
+        }
+        return this.hoursPerMonthRepository.findAllById(list)
                 .stream().map(this.hoursPerMonthMapper::to)
                 .toList();
     }
