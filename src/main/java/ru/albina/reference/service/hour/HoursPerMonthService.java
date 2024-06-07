@@ -11,7 +11,6 @@ import ru.albina.reference.repository.HoursPerMonthRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,17 @@ public class HoursPerMonthService {
                 .setHours(hours);
     }
 
+    @Transactional(readOnly = true)
+    public HoursPerMonthValue getByYearAndMonth(int year, int month) {
+        return this.hoursPerMonthRepository.findById(this.generateId(year, month))
+                .map(this.hoursPerMonthMapper::to)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Year: " + year + " Month: " + month + "; not generated!")
+                );
+    }
+
     private LocalDate generateId(int year, int month) {
         return LocalDate.of(year, month, 1);
     }
+
 }
