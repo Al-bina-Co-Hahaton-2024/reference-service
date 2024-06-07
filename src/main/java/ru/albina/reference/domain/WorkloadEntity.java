@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
@@ -14,7 +15,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "workload")
-public class Workload {
+@Accessors(chain = true)
+public class WorkloadEntity {
     @EmbeddedId
     private WorkloadId id;
 
@@ -26,6 +28,7 @@ public class Workload {
 
     @Getter
     @Setter
+    @Accessors(chain = true)
     @Embeddable
     public static class WorkloadId implements Serializable {
         private static final long serialVersionUID = 8447058825724154816L;
