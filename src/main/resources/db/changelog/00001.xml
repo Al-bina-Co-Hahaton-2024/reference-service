@@ -43,4 +43,18 @@
         <loadData tableName="workload" file="db/data/mrt_u2.csv" separator=";"/>
         <loadData tableName="workload" file="db/data/rg.csv" separator=";"/>
     </changeSet>
+    <changeSet id="003" author="alexander (bigtows) chapchuk">
+        <createTable tableName="week_number">
+            <column name="start_date" type="date">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="end_date" type="date">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="week_number" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <loadData tableName="week_number" file="db/data/calendar/calendar_week-2022-2024.csv" separator=";"/>
+    </changeSet>
 </databaseChangeLog>
