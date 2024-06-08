@@ -17,6 +17,7 @@ import ru.albina.reference.dto.response.WeekNumberResult;
 import ru.albina.reference.service.week.WeekService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,8 +38,25 @@ public class WeekNumberInternalController {
                     )
             }
     )
-    @GetMapping
-    public WeekNumberResult getWorkload(@RequestParam("date") LocalDate localDate) {
+    @GetMapping("/")
+    public WeekNumberResult getNumberResult(@RequestParam("date") LocalDate localDate) {
         return this.weekService.find(localDate);
+    }
+
+
+    @Operation(
+            summary = "Найти номера недель по датам",
+            security = @SecurityRequirement(name = OpenApiConfiguration.JWT),
+            responses = {
+                    @ApiResponse(
+                            description = "ОК",
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = WeekNumberResult.class))
+                    )
+            }
+    )
+    @GetMapping
+    public List<WeekNumberResult> getNumberResults(@RequestParam("dates") List<LocalDate> localDate) {
+        return this.weekService.findAll(localDate);
     }
 }
