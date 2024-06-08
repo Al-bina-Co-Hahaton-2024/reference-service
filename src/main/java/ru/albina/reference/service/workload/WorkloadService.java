@@ -10,9 +10,10 @@ import ru.albina.reference.domain.WorkloadEntity;
 import ru.albina.reference.dto.response.Workload;
 import ru.albina.reference.mapper.WorkloadMapper;
 import ru.albina.reference.repository.WorkloadRepository;
+import ru.albina.reference.service.week.WeekService;
 
 import java.time.LocalDate;
-import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @Service
@@ -33,6 +34,8 @@ public class WorkloadService {
     private final WorkloadMapper workloadMapper;
 
     private final WorkloadGeneratorClient workloadGeneratorClient;
+
+    private final WeekService weekService;
 
     @Transactional(readOnly = true)
     public List<Workload> getWorkloads() {
@@ -80,8 +83,8 @@ public class WorkloadService {
 
 
     private long maxWeeksAtYear(int year) {
-        LocalDate date = LocalDate.of(year, 6, 1);
-        return IsoFields.WEEK_OF_WEEK_BASED_YEAR.rangeRefinedBy(date).getMaximum();
+        LocalDate date = LocalDate.of(year,1,1).with(TemporalAdjusters.lastDayOfYear());
+        return this.weekService.find(date).getWeekNumber();
     }
 
 
