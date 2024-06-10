@@ -34,6 +34,7 @@ public class WeekService {
                 .map(this.weekNumberRepository::findByDate)
                 .map(v -> v.orElse(null))
                 .filter(Objects::nonNull)
+                .distinct()
                 .map(this::map)
                 .toList();
     }
