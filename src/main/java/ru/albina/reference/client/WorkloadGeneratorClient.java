@@ -8,8 +8,10 @@ import ru.albina.reference.domain.TypeModality;
 import ru.albina.reference.exception.EntityNotFoundException;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class WorkloadGeneratorClient {
@@ -28,14 +30,16 @@ public class WorkloadGeneratorClient {
         final var result = this.webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/{year}/{week}").build(year, week))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, BigDecimal>>() {
+                .bodyToMono(new ParameterizedTypeReference<List<Map.Entry<String, BigDecimal>>>() {
                 })
                 .blockOptional();
 
         final var modalityStr = modality.toString().toUpperCase() +
                 (typeModality != TypeModality.DEFAULT ? "_" + typeModality.toString().toUpperCase() : "");
 
-        return result.map(v -> v.get(modalityStr))
+        return result
+                .map(v-> v.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .map(v -> v.get(modalityStr))
                 .map(BigDecimal::longValue)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Can't find modality " + modality + " " + typeModality)
