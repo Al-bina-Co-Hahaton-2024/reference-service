@@ -20,4 +20,12 @@ public interface WeekNumberRepository extends JpaRepository<WeekNumberEntity, We
             nativeQuery = true
     )
     Optional<WeekNumberEntity> findByDate(@Param("date") LocalDate date);
+
+    @Query(
+            value = """
+                    SELECT MAX(week_number.week_number) FROM week_number WHERE date_part('year', start_date) = :year
+                    """,
+            nativeQuery = true
+    )
+    Optional<Long> getMaxWeekNumber(@Param("year") long year);
 }

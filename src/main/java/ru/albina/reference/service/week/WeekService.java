@@ -47,4 +47,12 @@ public class WeekService {
                 .weekNumber(week.getWeekNumber())
                 .build();
     }
+
+    @Transactional
+    public long findMaxWeekAtYear(int year) {
+        return this.weekNumberRepository.getMaxWeekNumber(year)
+                .orElseThrow(
+                        ()-> new EntityNotFoundException("Can't find week number for " + year)
+                );
+    }
 }

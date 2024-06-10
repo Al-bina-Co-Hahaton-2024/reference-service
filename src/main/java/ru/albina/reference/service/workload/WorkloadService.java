@@ -12,8 +12,6 @@ import ru.albina.reference.mapper.WorkloadMapper;
 import ru.albina.reference.repository.WorkloadRepository;
 import ru.albina.reference.service.week.WeekService;
 
-import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @Service
@@ -83,8 +81,7 @@ public class WorkloadService {
 
 
     private long maxWeeksAtYear(int year) {
-        LocalDate date = LocalDate.of(year,1,1).with(TemporalAdjusters.lastDayOfYear());
-        return this.weekService.find(date).getWeekNumber();
+        return this.weekService.findMaxWeekAtYear(year);
     }
 
 
