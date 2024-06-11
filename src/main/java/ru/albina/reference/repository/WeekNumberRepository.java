@@ -31,9 +31,11 @@ public interface WeekNumberRepository extends JpaRepository<WeekNumberEntity, We
 
     @Query(
             value = """
-                    SELECT * FROM week_number 
-                             WHERE (date_part('year', end_date) = :year OR date_part('year', start_date) = :yearMinusOne) 
-                                    AND week_number.week_number = :week;
+                    SELECT * FROM week_number
+                        WHERE (
+                                date_part('year', end_date) = :year OR
+                                ((date_part('year', start_date) = :yearMinusOne) AND (date_part('day', end_date) - date_part('day', start_date)) >= 7)
+                            ) AND week_number.week_number = :week
                     """,
             nativeQuery = true
     )
