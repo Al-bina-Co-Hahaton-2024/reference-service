@@ -28,7 +28,7 @@ public class WeekNumberInternalController {
     private final WeekService weekService;
 
     @Operation(
-            summary = "Найти номер недели по дате",
+            summary = "Найти номер недели по фильтрам",
             security = @SecurityRequirement(name = OpenApiConfiguration.JWT),
             responses = {
                     @ApiResponse(
@@ -39,7 +39,16 @@ public class WeekNumberInternalController {
             }
     )
     @GetMapping("/")
-    public WeekNumberResult getNumberResult(@RequestParam("date") LocalDate localDate) {
+    public WeekNumberResult getNumberResult(
+            @RequestParam(name = "date", required = false) LocalDate localDate,
+            @RequestParam(name = "year", required = false) int year,
+            @RequestParam(name = "week", required = false) int week
+    ) {
+        //TODO refactor!
+        if (localDate == null) {
+            return this.weekService.getByYearAndWeek(year, week);
+        }
+
         return this.weekService.find(localDate);
     }
 

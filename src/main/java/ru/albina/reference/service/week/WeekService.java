@@ -39,6 +39,16 @@ public class WeekService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public WeekNumberResult getByYearAndWeek(int year, int week) {
+        return this.map(
+                this.weekNumberRepository.findByYearAndWeek(year, week)
+                        .orElseThrow(
+                                () -> new EntityNotFoundException("Can't find week number for" + year + " and " + week)
+                        )
+        );
+    }
+
 
     private WeekNumberResult map(WeekNumberEntity week) {
         return WeekNumberResult.builder()
@@ -52,7 +62,7 @@ public class WeekService {
     public long findMaxWeekAtYear(int year) {
         return this.weekNumberRepository.getMaxWeekNumber(year)
                 .orElseThrow(
-                        ()-> new EntityNotFoundException("Can't find week number for " + year)
+                        () -> new EntityNotFoundException("Can't find week number for " + year)
                 );
     }
 }
