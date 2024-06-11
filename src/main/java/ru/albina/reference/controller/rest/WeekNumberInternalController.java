@@ -41,8 +41,8 @@ public class WeekNumberInternalController {
     @GetMapping("/")
     public WeekNumberResult getNumberResult(
             @RequestParam(name = "date", required = false) LocalDate localDate,
-            @RequestParam(name = "year", required = false) int year,
-            @RequestParam(name = "week", required = false) int week
+            @RequestParam(name = "year", required = false) Integer year,
+            @RequestParam(name = "week", required = false) Integer week
     ) {
         //TODO refactor!
         if (localDate == null) {
