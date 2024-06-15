@@ -57,4 +57,7 @@
         </createTable>
         <loadData tableName="week_number" file="db/data/calendar/calendar_week-2022-2024.csv" separator=";"/>
     </changeSet>
+    <changeSet id="004" author="alexander (bigtows) chapchuk">
+        <loadData tableName="week_number" file="db/data/calendar/calendar_week-2025-2027.csv" separator=";"/>
+    </changeSet>
 </databaseChangeLog>
