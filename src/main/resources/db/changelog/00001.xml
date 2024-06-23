@@ -60,4 +60,12 @@
     <changeSet id="004" author="alexander (bigtows) chapchuk">
         <loadData tableName="week_number" file="db/data/calendar/calendar_week-2025-2027.csv" separator=";"/>
     </changeSet>
+
+    <changeSet id="005" author="alexander (bigtows) chapchuk">
+        <sql>
+            DELETE
+            FROM workload
+            WHERE generated_value &lt; 0;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

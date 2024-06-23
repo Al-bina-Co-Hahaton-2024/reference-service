@@ -45,7 +45,7 @@ public class WorkloadService {
     @Transactional
     public List<Workload> getOrCreate(int year, Set<Integer> weeks) {
         final var result = new LinkedList<Workload>();
-        weeks.forEach(week->{
+        weeks.forEach(week -> {
             final var list = REFERENCE.keySet().stream()
                     .map(modality -> REFERENCE.get(modality).stream().map(typeModality -> this.getOrCreateEntity(year, week, modality, typeModality)).toList())
                     .flatMap(Collection::stream)
@@ -75,7 +75,7 @@ public class WorkloadService {
                 .orElseGet(() -> this.workloadRepository.save(
                         new WorkloadEntity()
                                 .setId(id)
-                                .setGeneratedValue(this.workloadGeneratorClient.getByYearAndWeek(year, week, modality, typeModality))
+                                .setGeneratedValue(Math.max(0, this.workloadGeneratorClient.getByYearAndWeek(year, week, modality, typeModality)))
                 ));
     }
 
